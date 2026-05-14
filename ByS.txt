@@ -1,0 +1,30 @@
+format long;
+f = @(x) x^2 -2*cos(2*x);
+a=0.5;
+b=1.0;
+
+disp('Bisection method:');
+
+cont=0;
+c=0;
+while cont<3
+    c=(a+b)/2;
+    if f(a)*f(c)<0
+        b=c;
+    else
+        a=c;
+    end
+    disp(c);
+    cont=cont+1;
+    end
+
+disp('Secant method:');
+
+x0=0.5;
+x1=1.0;
+
+xn=0;
+
+xn=(x0*f(x1)-x1*f(x0))/(f(x1)-f(x0));
+
+disp(xn);
