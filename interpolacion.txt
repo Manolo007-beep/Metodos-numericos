@@ -1,0 +1,40 @@
+clear; clc;
+format long;
+
+% --- CONFIGURACIÓN ---
+% Datos del problema (puedes agregar más puntos)
+X = [1.0, 1.5, 2.0]; 
+Y = [1.0, 0.828, 0.667]; 
+x_interp = 1.2; % Punto a evaluar
+% ---------------------
+
+n = length(X);
+L = ones(1, n); % Vector para almacenar los polinomios base Li(x)
+valor_aprox = 0;
+
+fprintf('--- Interpolación de Lagrange ---\n');
+fprintf('Calculando para x = %.4f\n\n', x_interp);
+
+for i = 1:n
+    % Calcular Li(x)
+    numerador = 1;
+    denominador = 1;
+    
+    for j = 1:n
+        if i ~= j
+            numerador = numerador * (x_interp - X(j));
+            denominador = denominador * (X(i) - X(j));
+        end
+    end
+    
+    L(i) = numerador / denominador;
+    
+    % Sumar al polinomio final: P(x) = sum( yi * Li(x) )
+    valor_aprox = valor_aprox + Y(i) * L(i);
+    
+    fprintf('L%d(%.2f) = %10.6f  |  Término (y%d * L%d) = %10.6f\n', ...
+            i-1, x_interp, L(i), i-1, i-1, Y(i)*L(i));
+end
+
+fprintf('\n----------------------------------------------\n');
+fprintf('RESULTADO FINAL: P(%.4f) = %.10f\n', x_interp, valor_aprox);
