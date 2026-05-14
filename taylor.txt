@@ -1,0 +1,52 @@
+clear; clc;
+format long;
+
+% --- CONFIGURACIÓN DEL PROBLEMA ---
+% Define la función original para calcular el error exacto
+f = @(x) log(x); 
+
+% Punto de expansión (a) y punto a evaluar (x_eval)
+a = 1;
+x_eval = 1.1;
+
+% DERIVADAS: Aquí debes ingresar los valores de f(a), f'(a), f''(a)... calculados a mano.
+% Ejemplo para ln(x) en a=1:
+% f(1) = 0
+% f'(1) = 1/1 = 1
+% f''(1) = -1/1^2 = -1
+% f'''(1) = 2/1^3 = 2
+derivadas_en_a = [0, 1, -1, 2]; % [f(a), f'(a), f''(a), f'''(a)]
+
+% ---------------------------------
+
+n = length(derivadas_en_a) - 1; % Grado del polinomio
+h = x_eval - a;                 % Diferencia (x - a)
+suma_taylor = 0;
+
+fprintf('--- Cálculo de Serie de Taylor (Grado %d) ---\n', n);
+fprintf('Evaluando en x = %.4f (h = %.4f)\n\n', x_eval, h);
+fprintf('k | Derivada f(k)(a) | Término (f(k)/k!)*h^k | Suma Acumulada\n');
+fprintf('--------------------------------------------------------------\n');
+
+for k = 0:n
+    % Cálculo del término individual
+    termino = (derivadas_en_a(k+1) / factorial(k)) * (h^k);
+    
+    % Acumulación
+    suma_taylor = suma_taylor + termino;
+    
+    % Mostrar fila de la tabla
+    fprintf('%d | %15.6f | %20.10f | %15.10f\n', ...
+            k, derivadas_en_a(k+1), termino, suma_taylor);
+end
+
+% Resultados finales y error
+valor_real = f(x_eval);
+error_abs = abs(valor_real - suma_taylor);
+error_rel_porc = (error_abs / abs(valor_real)) * 100;
+
+fprintf('\n--------------------------------------------------------------\n');
+fprintf('VALOR APROXIMADO: %.10f\n', suma_taylor);
+fprintf('VALOR REAL:       %.10f\n', valor_real);
+fprintf('ERROR ABSOLUTO:   %.10e\n', error_abs);
+fprintf('ERROR RELATIVO:   %.6f %%\n', error_rel_porc);
